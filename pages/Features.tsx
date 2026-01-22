@@ -21,7 +21,6 @@ import {
   Server,
   CloudLightning,
   Monitor,
-  // Added Users to fix "Cannot find name 'Users'" error
   Users
 } from 'lucide-react';
 
@@ -88,7 +87,7 @@ const Features: React.FC = () => {
               <Monitor className="w-5 h-5" />
               <span>EXPLORE CONTROL PANEL</span>
             </Link>
-            <Link to="/plans" className="w-full sm:w-auto px-10 py-5 glass border-white/10 rounded-[1.25rem] font-black hover:bg-slate-900 transition-all flex items-center justify-center space-x-2">
+            <Link to="/hosting" className="w-full sm:w-auto px-10 py-5 glass border-white/10 rounded-[1.25rem] font-black hover:bg-slate-900 transition-all flex items-center justify-center space-x-2">
               <span>VIEW HOSTING PLANS</span>
               <ChevronRight className="w-5 h-5 text-orange-500" />
             </Link>
@@ -257,7 +256,7 @@ const Features: React.FC = () => {
               Experience the pinnacle of game server hosting. Fast deployment, elite hardware, and unmatched control.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-              <Link to="/plans" className="w-full sm:w-auto px-12 py-5 bg-white text-orange-600 rounded-[1.5rem] text-xl font-black shadow-2xl hover:scale-105 transition-transform active:scale-95">
+              <Link to="/hosting" className="w-full sm:w-auto px-12 py-5 bg-white text-orange-600 rounded-[1.5rem] text-xl font-black shadow-2xl hover:scale-105 transition-transform active:scale-95">
                 Launch Your Server
               </Link>
               <Link to="/firecraftx" className="w-full sm:w-auto px-12 py-5 glass border-white/20 text-white rounded-[1.5rem] text-xl font-black hover:bg-white/10 transition-all">

@@ -1,21 +1,43 @@
 
-import React, { useState } from 'react';
-/* Added missing Send icon import below */
-import { Users, Search, Ban, Trash2, Clock, Mail, ShieldAlert, CheckCircle, ExternalLink, MessageCircle, Package, Activity, Download, Send } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Users, Search, Ban, Trash2, Clock, Mail, ShieldAlert, CheckCircle, ExternalLink, MessageCircle, Package, Activity, Download, Send, AlertCircle } from 'lucide-react';
 
 const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'users' | 'chat' | 'orders'>('users');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const navigate = useNavigate();
   
+  useEffect(() => {
+    const token = localStorage.getItem('userToken');
+    if (token !== 'mock-admin-jwt') {
+      navigate('/login');
+    } else {
+      setIsAuthorized(true);
+    }
+  }, [navigate]);
+
   const [users, setUsers] = useState([
     { id: 1, username: 'ArjunX', email: 'arjun@gmail.com', role: 'user', status: 'active', ip: '103.21.54.12' },
     { id: 2, username: 'StaffNode', email: 'support@firenodex.online', role: 'admin', status: 'active', ip: '127.0.0.1' },
+    { id: 3, username: 'Slayer99', email: 'slayer@firenodex.online', role: 'user', status: 'active', ip: '192.168.1.5' },
+    { id: 4, username: 'VikramPvP', email: 'vikram@firenodex.online', role: 'user', status: 'active', ip: '103.54.21.11' },
   ]);
 
   const [activeChats, setActiveChats] = useState([
     { id: 1, user: 'ArjunX', message: 'Hey, I need help with my Titan rank.', time: '2m ago', unread: true },
     { id: 2, user: 'Slayer99', message: 'My server is lagging.', time: '15m ago', unread: false },
   ]);
+
+  if (!isAuthorized) return null;
+
+  // Real-time filtering logic
+  const filteredUsers = users.filter(u => 
+    u.username.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    u.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    u.ip.includes(searchTerm)
+  );
 
   return (
     <div className="pt-24 pb-32 min-h-screen bg-slate-950">
@@ -44,13 +66,13 @@ const AdminDashboard: React.FC = () => {
               <div className="relative flex-grow max-w-md">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
                 <input 
-                  className="w-full bg-slate-900 border border-slate-800 rounded-xl py-3 pl-12 pr-5 text-white" 
-                  placeholder="Search user list..."
+                  className="w-full bg-slate-900 border border-slate-800 rounded-xl py-3 pl-12 pr-5 text-white outline-none focus:border-orange-500 transition-colors" 
+                  placeholder="Search user list by name, email or IP..."
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
                 />
               </div>
-              <button className="flex items-center space-x-2 bg-slate-800 text-white px-6 py-3 rounded-xl font-bold">
+              <button className="flex items-center space-x-2 bg-slate-800 text-white px-6 py-3 rounded-xl font-bold hover:bg-slate-700 transition-colors">
                 <Download className="w-4 h-4" />
                 <span>Export CSV</span>
               </button>
@@ -67,7 +89,7 @@ const AdminDashboard: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-800/50">
-                  {users.map(u => (
+                  {filteredUsers.length > 0 ? filteredUsers.map(u => (
                     <tr key={u.id} className="hover:bg-white/5 transition-all group">
                       <td className="p-6">
                         <div className="flex items-center space-x-4">
@@ -92,7 +114,14 @@ const AdminDashboard: React.FC = () => {
                         </div>
                       </td>
                     </tr>
-                  ))}
+                  )) : (
+                    <tr>
+                      <td colSpan={4} className="p-20 text-center">
+                        <div className="text-slate-500 font-bold uppercase tracking-widest text-xs mb-2">No users found</div>
+                        <p className="text-slate-700 text-xs">Try adjusting your search criteria</p>
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>
@@ -137,7 +166,7 @@ const AdminDashboard: React.FC = () => {
                  </div>
                </div>
                <div className="p-4 bg-slate-900 border-t border-slate-800 flex space-x-2">
-                 <input className="flex-grow bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-white" placeholder="Reply to user..." />
+                 <input className="flex-grow bg-slate-950 border border-slate-800 rounded-xl py-3 px-4 text-white outline-none focus:border-orange-500" placeholder="Reply to user..." />
                  <button className="p-3 fire-gradient rounded-xl text-white"><Send className="w-5 h-5" /></button>
                </div>
             </div>

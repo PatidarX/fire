@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { CartItem } from '../types';
+import { CartItem, BillingCycle } from '../types';
 
 interface CartContextType {
   cart: CartItem[];
@@ -13,7 +13,18 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('firenode_cart');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('firenode_cart', JSON.stringify(cart));
+  }, [cart]);
 
   const addToCart = (item: CartItem) => {
     setCart(prev => [...prev, item]);
@@ -26,7 +37,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const clearCart = () => setCart([]);
 
   const total = cart.reduce((acc, item) => {
-    const base = item.cycle === 'Monthly' ? item.plan.priceMonthly : item.plan.priceYearly;
+    const base = item.cycle === BillingCycle.MONTHLY ? item.plan.priceMonthly : item.plan.priceYearly;
     const addonsTotal = item.addons.reduce((a, b) => a + b.price, 0);
     return acc + base + addonsTotal;
   }, 0);

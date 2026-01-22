@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-// Added ChevronRight to the imports below to fix "Cannot find name 'ChevronRight'" error
 import { ChevronLeft, ChevronRight, Shield, Sword, Heart, Gavel, Users, Info, Star, RefreshCw } from 'lucide-react';
 
 const Rules: React.FC = () => {
@@ -234,7 +233,7 @@ const Rules: React.FC = () => {
             <a href="#" className="w-full sm:w-auto px-10 py-4 bg-cyan-600 hover:bg-cyan-500 text-white rounded-2xl font-black shadow-xl neon-cyan transition-transform hover:scale-105 active:scale-95">
               Join Discord Wiki
             </a>
-            <Link to="/contact" className="w-full sm:w-auto px-10 py-4 glass border-slate-700 text-white rounded-2xl font-black transition-transform hover:scale-105 active:scale-95">
+            <Link to="/support" className="w-full sm:w-auto px-10 py-4 glass border-slate-700 text-white rounded-2xl font-black transition-transform hover:scale-105 active:scale-95">
               Open Support Ticket
             </Link>
           </div>

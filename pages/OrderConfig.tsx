@@ -46,19 +46,17 @@ const OrderConfig: React.FC = () => {
   };
 
   return (
-    <div className="pt-32 pb-32 min-h-screen">
+    <div className="pt-32 pb-32 min-h-screen bg-slate-950">
       <div className="container mx-auto px-6">
-        <button onClick={() => navigate('/plans')} className="flex items-center space-x-2 text-slate-400 hover:text-white transition-colors mb-12 font-bold group">
+        <button onClick={() => navigate('/hosting')} className="flex items-center space-x-2 text-slate-400 hover:text-white transition-colors mb-12 font-bold group">
           <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           <span>Back to Plans</span>
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
-          {/* Config Forms */}
           <div className="lg:col-span-2 space-y-8">
-            <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-12">Configure <span className="text-orange-500">{plan.name}</span> Plan</h1>
+            <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter mb-12 uppercase">Configure <span className="text-orange-500">{plan.name}</span> Plan</h1>
 
-            {/* Billing Cycle */}
             <div className="glass p-8 rounded-3xl border-slate-800">
                <h3 className="text-xl font-bold text-white mb-6 flex items-center space-x-3">
                  <CreditCard className="w-5 h-5 text-orange-500" />
@@ -81,7 +79,6 @@ const OrderConfig: React.FC = () => {
                </div>
             </div>
 
-            {/* Server Location */}
             <div className="glass p-8 rounded-3xl border-slate-800">
                <h3 className="text-xl font-bold text-white mb-6 flex items-center space-x-3">
                  <Globe className="w-5 h-5 text-orange-500" />
@@ -100,7 +97,6 @@ const OrderConfig: React.FC = () => {
                </div>
             </div>
 
-            {/* Version Selector */}
             <div className="glass p-8 rounded-3xl border-slate-800">
                <h3 className="text-xl font-bold text-white mb-6 flex items-center space-x-3">
                  <Database className="w-5 h-5 text-orange-500" />
@@ -119,7 +115,6 @@ const OrderConfig: React.FC = () => {
                </select>
             </div>
 
-            {/* Addons */}
             <div className="glass p-8 rounded-3xl border-slate-800">
                <h3 className="text-xl font-bold text-white mb-6 flex items-center space-x-3">
                  <Settings className="w-5 h-5 text-orange-500" />
@@ -143,11 +138,9 @@ const OrderConfig: React.FC = () => {
             </div>
           </div>
 
-          {/* Order Summary Sticky Card */}
           <div className="lg:sticky lg:top-32 space-y-6">
             <div className="glass p-8 rounded-[2.5rem] border-slate-800 shadow-2xl">
-              <h3 className="text-2xl font-black text-white mb-8 tracking-tighter">Order Summary</h3>
-              
+              <h3 className="text-2xl font-black text-white mb-8 tracking-tighter uppercase">Order Summary</h3>
               <div className="space-y-4 mb-8">
                 <div className="flex justify-between items-center text-sm font-bold">
                   <span className="text-slate-400">{plan.name} Hosting ({cycle})</span>
@@ -160,35 +153,22 @@ const OrderConfig: React.FC = () => {
                   </div>
                 ))}
               </div>
-
               <div className="pt-6 border-t border-slate-800 mb-8">
                 <div className="flex justify-between items-center">
-                  <span className="text-lg font-black text-white">Total Amount</span>
-                  <span className="text-3xl font-black text-orange-500 animate-pulse">₹{calculateSubtotal().toFixed(2)}</span>
+                  <span className="text-lg font-black text-white uppercase">Total</span>
+                  <span className="text-3xl font-black text-orange-500">₹{calculateSubtotal().toFixed(2)}</span>
                 </div>
               </div>
-
               <button 
                 onClick={handleContinue}
-                className="w-full py-5 fire-gradient rounded-2xl text-xl font-black text-white shadow-xl neon-orange active:scale-95 transition-all mb-4"
+                className="w-full py-5 fire-gradient rounded-2xl text-xl font-black text-white shadow-xl neon-orange active:scale-95 transition-all mb-4 uppercase tracking-widest"
               >
                 Add to Cart
               </button>
-              
-              <div className="flex items-center justify-center space-x-2 text-slate-500 font-bold text-xs uppercase tracking-widest">
+              <div className="flex items-center justify-center space-x-2 text-slate-500 font-bold text-[10px] uppercase tracking-widest">
                 <ShieldCheck className="w-4 h-4" />
                 <span>Secure 256-bit Checkout</span>
               </div>
-            </div>
-
-            <div className="glass p-6 rounded-3xl border-slate-800 flex items-center space-x-4">
-               <div className="w-12 h-12 rounded-full fire-gradient flex items-center justify-center text-white">
-                 <Zap className="w-6 h-6" />
-               </div>
-               <div>
-                 <div className="text-white font-bold text-sm">Instant Setup</div>
-                 <div className="text-slate-500 text-xs font-bold uppercase">Ready in 60s</div>
-               </div>
             </div>
           </div>
         </div>

@@ -1,20 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Flame, Menu, X, ShoppingCart, User } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Flame, Menu, X, ShoppingCart, User, LayoutDashboard, LogOut } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { LIVE_URLS } from '../constants';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const { cart } = useCart();
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
+    
+    // Check Auth State
+    const token = localStorage.getItem('userToken');
+    setIsLoggedIn(!!token);
+    setIsAdmin(token === 'mock-admin-jwt');
+
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [location]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('userToken');
+    setIsLoggedIn(false);
+    setIsAdmin(false);
+    navigate('/login');
+  };
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -45,14 +61,20 @@ const Navbar: React.FC = () => {
               {link.name}
             </Link>
           ))}
-          <a 
-            href={LIVE_URLS.PANEL} 
-            target="_blank" 
-            rel="noopener noreferrer"
+          <Link 
+            to="/control-panel" 
             className="text-sm font-semibold transition-colors text-slate-300 hover:text-orange-500"
           >
-            Control Panel
-          </a>
+            Server Panel
+          </Link>
+          {isAdmin && (
+            <Link 
+              to="/admin" 
+              className="text-sm font-black text-orange-500 hover:text-orange-400 uppercase tracking-widest"
+            >
+              Master Admin
+            </Link>
+          )}
         </div>
 
         <div className="hidden lg:flex items-center space-x-4">
@@ -64,15 +86,32 @@ const Navbar: React.FC = () => {
               </span>
             )}
           </Link>
-          <a 
-            href={LIVE_URLS.BILLING}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center space-x-2 neon-orange"
-          >
-            <User className="w-4 h-4" />
-            <span>Login</span>
-          </a>
+          
+          {isLoggedIn ? (
+            <div className="flex items-center space-x-3">
+              <Link 
+                to="/dashboard"
+                className="bg-slate-900 border border-slate-800 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center space-x-2 hover:bg-slate-800"
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                <span>My Account</span>
+              </Link>
+              <button 
+                onClick={handleLogout}
+                className="p-2.5 bg-red-950/20 text-red-500 border border-red-500/20 rounded-xl hover:bg-red-500 hover:text-white transition-all"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <Link 
+              to="/login"
+              className="bg-orange-600 hover:bg-orange-700 text-white px-8 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center space-x-2 neon-orange"
+            >
+              <User className="w-4 h-4" />
+              <span>Login</span>
+            </Link>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -94,22 +133,44 @@ const Navbar: React.FC = () => {
               {link.name}
             </Link>
           ))}
-          <a href={LIVE_URLS.PANEL} target="_blank" rel="noopener noreferrer" className="text-lg font-bold text-slate-300 hover:text-orange-500">
-            Control Panel
-          </a>
+          <Link to="/control-panel" onClick={() => setIsOpen(false)} className="text-lg font-bold text-slate-300 hover:text-orange-500">
+            Server Panel
+          </Link>
+          {isAdmin && (
+            <Link to="/admin" onClick={() => setIsOpen(false)} className="text-lg font-black text-orange-500 uppercase">
+              Admin Control
+            </Link>
+          )}
           <div className="pt-4 flex flex-col space-y-4">
             <Link to="/cart" onClick={() => setIsOpen(false)} className="flex items-center space-x-2 text-slate-300 font-bold">
               <ShoppingCart className="w-6 h-6" />
               <span>Cart ({cart.length})</span>
             </Link>
-            <a 
-              href={LIVE_URLS.BILLING} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="bg-orange-600 w-full py-3 rounded-xl font-bold text-center text-white"
-            >
-              Client Login
-            </a>
+            {isLoggedIn ? (
+              <div className="space-y-3">
+                <Link 
+                  to="/dashboard" 
+                  onClick={() => setIsOpen(false)}
+                  className="bg-slate-900 block w-full py-3 rounded-xl font-bold text-center text-white border border-slate-800"
+                >
+                  My Dashboard
+                </Link>
+                <button 
+                  onClick={() => { handleLogout(); setIsOpen(false); }}
+                  className="bg-red-600/10 text-red-500 w-full py-3 rounded-xl font-bold text-center border border-red-500/20"
+                >
+                  Logout
+                </button>
+              </div>
+            ) : (
+              <Link 
+                to="/login" 
+                onClick={() => setIsOpen(false)}
+                className="bg-orange-600 w-full py-3 rounded-xl font-bold text-center text-white"
+              >
+                Client Login
+              </Link>
+            )}
           </div>
         </div>
       )}

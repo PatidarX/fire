@@ -1,10 +1,8 @@
 
 import React, { useState } from 'react';
-// Fix: Added 'Link' to react-router-dom imports
 import { useNavigate, Link } from 'react-router-dom';
 import { Check, Cpu, HardDrive, Star, Package, Database, Users, Server, Shield, Zap, Layers, Component } from 'lucide-react';
 import { BillingCycle } from '../types';
-// Fix: Added import for LIVE_URLS constant
 import { LIVE_URLS } from '../constants';
 
 const HostingPlans: React.FC = () => {
@@ -12,7 +10,8 @@ const HostingPlans: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSelect = (planId: string) => {
-    navigate(`/checkout?plan=${planId}&cycle=${cycle.toLowerCase()}`);
+    // Corrected: Navigate to the order configuration page, not directly to checkout
+    navigate(`/order/${planId}?cycle=${cycle.toLowerCase()}`);
   };
 
   const minecraftPlans = [
@@ -134,14 +133,11 @@ const HostingPlans: React.FC = () => {
                 </div>
               )}
 
-              {/* Dynamic Header Background Treatment */}
               <div className={`absolute inset-0 bg-gradient-to-b ${plan.headerBg} h-80 -z-10 opacity-30 group-hover:opacity-40 transition-opacity`}></div>
               
-              {/* Subtle Inner Glow Border */}
               <div className="absolute inset-0 rounded-[2.25rem] border border-white/5 pointer-events-none"></div>
 
               <div className="p-8 md:p-10 flex flex-col flex-grow relative z-10">
-                {/* Brand-Style Header Section */}
                 <div className="flex items-center justify-between mb-8 border-b border-slate-800/40 pb-8">
                   <div className="flex items-center space-x-5">
                     <div className={`w-16 h-16 md:w-20 md:h-20 ${plan.badgeColor} rounded-[1.25rem] flex items-center justify-center border border-white/5 transition-all duration-500 group-hover:shadow-[0_0_30px_rgba(255,255,255,0.05)]`}>
@@ -163,7 +159,6 @@ const HostingPlans: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Resource Grid (2x2) */}
                 <div className="grid grid-cols-2 gap-3 md:gap-4 mb-8">
                   {plan.specs.map((spec, i) => (
                     <div key={i} className="bg-slate-950/40 border border-white/5 p-4 md:p-5 rounded-[1.25rem] flex flex-col items-center text-center group/tile hover:bg-slate-900/60 transition-all duration-300 backdrop-blur-md">
@@ -174,7 +169,6 @@ const HostingPlans: React.FC = () => {
                   ))}
                 </div>
 
-                {/* Compact Feature Checklist */}
                 <div className="mb-8 flex-grow">
                   <div className={`text-[9px] font-black text-slate-500 uppercase tracking-widest mb-4 px-1 border-l-4 border-slate-800 ml-1 pl-4`}>Core Tier Features</div>
                   <div className="grid grid-cols-2 gap-x-4 gap-y-3 px-1">
@@ -187,12 +181,8 @@ const HostingPlans: React.FC = () => {
                       </div>
                     ))}
                   </div>
-                  <div className="mt-6 text-[8px] md:text-[9px] font-bold text-slate-600 uppercase tracking-widest text-center italic border-t border-slate-800/30 pt-4">
-                    More features available in control panel
-                  </div>
                 </div>
 
-                {/* Premium CTA Button */}
                 <div className="mt-auto">
                   <button 
                     onClick={() => handleSelect(plan.id)}
@@ -208,7 +198,6 @@ const HostingPlans: React.FC = () => {
           ))}
         </div>
 
-        {/* Enterprise Comparison Banner */}
         <div className="mt-32 glass p-10 md:p-16 rounded-[2.25rem] border-white/5 text-center relative overflow-hidden group shadow-2xl">
           <div className="absolute top-0 right-0 p-12 opacity-5 group-hover:scale-110 transition-transform pointer-events-none">
             <Server className="w-64 h-64 text-white" />

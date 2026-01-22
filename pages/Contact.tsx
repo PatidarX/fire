@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageSquare, LifeBuoy, Mail, Headphones, Send, ChevronRight, ShieldCheck, Zap, MessageCircle, X, Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
 import { LIVE_URLS } from '../constants';
@@ -25,6 +26,7 @@ const Contact: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -33,7 +35,6 @@ const Contact: React.FC = () => {
   useEffect(() => {
     if (isChatOpen) {
       scrollToBottom();
-      // Load history from backend here in real implementation
       if (chatMessages.length === 0) {
         setChatMessages([{
           id: 1,
@@ -59,8 +60,6 @@ const Contact: React.FC = () => {
     setChatMessages(prev => [...prev, userMsg]);
     setInputValue('');
 
-    // Backend call would go here: socket.emit('chatMessage', userMsg);
-    // Simulated Admin Response
     setTimeout(() => {
       setChatMessages(prev => [...prev, {
         id: Date.now() + 1,
@@ -76,12 +75,29 @@ const Contact: React.FC = () => {
     if (formState.honeypot) return; // Spam check
     
     setIsSubmitting(true);
-    // In production: await fetch('https://api.firenodex.online/inquiry', ...)
-    setTimeout(() => {
+    setSubmitStatus('idle');
+    setErrorMessage('');
+
+    // Simulation of a production endpoint for demonstration
+    try {
+      // For real implementation: await fetch('/api/inquiry', { ... });
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const success = true; // In a real app, check response.ok
+
+      if (success) {
+        setSubmitStatus('success');
+        setFormState({ name: '', email: '', subject: 'Sales Inquiry', message: '', honeypot: '' });
+      } else {
+        setSubmitStatus('error');
+        setErrorMessage('Failed to send message. Please try again later.');
+      }
+    } catch (err) {
+      setSubmitStatus('error');
+      setErrorMessage('Network error. Please check your connection or try again later.');
+    } finally {
       setIsSubmitting(false);
-      setSubmitStatus('success');
-      setFormState({ name: '', email: '', subject: 'Sales Inquiry', message: '', honeypot: '' });
-    }, 2000);
+    }
   };
 
   return (
@@ -125,9 +141,16 @@ const Contact: React.FC = () => {
           </div>
 
           {submitStatus === 'success' && (
-            <div className="mb-8 p-6 bg-green-500/10 border border-green-500/50 rounded-2xl flex items-center space-x-4 text-green-500">
+            <div className="mb-8 p-6 bg-green-500/10 border border-green-500/50 rounded-2xl flex items-center space-x-4 text-green-500 animate-in fade-in slide-in-from-top-2">
               <CheckCircle2 className="w-8 h-8" />
               <p className="font-bold">Message sent! We'll reply to your email shortly.</p>
+            </div>
+          )}
+
+          {submitStatus === 'error' && (
+            <div className="mb-8 p-6 bg-red-500/10 border border-red-500/50 rounded-2xl flex items-center space-x-4 text-red-500 animate-in fade-in slide-in-from-top-2">
+              <AlertCircle className="w-8 h-8" />
+              <p className="font-bold">{errorMessage}</p>
             </div>
           )}
 
@@ -136,7 +159,7 @@ const Contact: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <input 
                 required 
-                className="bg-slate-950 border border-slate-800 rounded-xl py-4 px-5 text-white outline-none focus:border-orange-500" 
+                className="bg-slate-950 border border-slate-800 rounded-xl py-4 px-5 text-white outline-none focus:border-orange-500 transition-colors" 
                 placeholder="Full Name" 
                 value={formState.name}
                 onChange={e => setFormState({...formState, name: e.target.value})}
@@ -144,7 +167,7 @@ const Contact: React.FC = () => {
               <input 
                 required 
                 type="email" 
-                className="bg-slate-950 border border-slate-800 rounded-xl py-4 px-5 text-white outline-none focus:border-orange-500" 
+                className="bg-slate-950 border border-slate-800 rounded-xl py-4 px-5 text-white outline-none focus:border-orange-500 transition-colors" 
                 placeholder="Email Address"
                 value={formState.email}
                 onChange={e => setFormState({...formState, email: e.target.value})}
@@ -153,12 +176,12 @@ const Contact: React.FC = () => {
             <textarea 
               required 
               rows={4} 
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 px-5 text-white outline-none focus:border-orange-500" 
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl py-4 px-5 text-white outline-none focus:border-orange-500 transition-colors" 
               placeholder="Your Message"
               value={formState.message}
               onChange={e => setFormState({...formState, message: e.target.value})}
             ></textarea>
-            <button disabled={isSubmitting} className="w-full py-5 fire-gradient rounded-2xl text-xl font-black text-white shadow-xl flex items-center justify-center space-x-2">
+            <button disabled={isSubmitting} className="w-full py-5 fire-gradient rounded-2xl text-xl font-black text-white shadow-xl flex items-center justify-center space-x-2 active:scale-95 transition-transform disabled:opacity-50">
               {isSubmitting ? <Loader2 className="animate-spin" /> : <span>Send Inquiry</span>}
             </button>
           </form>

@@ -37,6 +37,12 @@
             background: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
         }
 
+        /* Support for custom tailwind-like hover classes used in components */
+        .group:hover .group-hover\:fire-gradient {
+            background: linear-gradient(135deg, #f97316 0%, #dc2626 100%) !important;
+            border-color: transparent !important;
+        }
+
         /* Enhanced Global CTA Hover Effects */
         .fire-gradient, .cyan-gradient, .bg-orange-600, .bg-cyan-600, .bg-white {
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
